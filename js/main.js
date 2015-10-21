@@ -2,52 +2,59 @@
 
 
 $(document).ready(function(event) {
-
+    $(".has-token-indicator").hide();
+    var has_creds = false;
     if (localStorage.dropbox_access !== undefined) {
-		var dbt = JSON.parse(localStorage.dropbox_access);
-		if(dbt.access_token !== undefined){
-        	$("#token").val(dbt.access_token);
-        	window.dropbox = new Dropbox($("#token").val());
-		}
-    } else if (localStorage.appKey !== undefined) {
-        $("#appKey").val(localStorage.appKey);
-        if (localStorage.appSecret !== undefined) {
-            $("#appSecret").val(localStorage.appSecret);
+        var dbt = JSON.parse(localStorage.dropbox_access);
+        if (dbt.access_token !== undefined) {
+            $("#token").val(dbt.access_token);
+            window.dropbox = new Dropbox($("#token").val());
+            $(".creds-container").hide();
+            $(".has-token-indicator").show();
+            hasCreds();
+            has_creds = true;
         }
     }
-    window.dropboxAuth = new DropboxAuth();
 
-
-
-    // if(localStorage.accessCode != undefined){
-    //     $("#accessCode").val(localStorage.accessCode);
-    //     $("#btGetAccessCode").attr("disabled","disabled");
-    // }
-
-
+    if (!has_creds) {
+        window.dropboxAuth = new DropboxAuth();
+    }
 }); // Fine document
 
 
+function hasCreds() {
+    $(".has-token-indicator").show();
+    $(".has-token-indicator").css('background-color: green');
+    $(".creds-container").hide();
+    window.dropboxAuth = undefined;
+}
+
+function resetCreds() {
+    $(".has-token-indicator").hide();
+    $(".creds-container").show();
+    window.dropboxAuth = new DropboxAuth();
+    $("#token").val("");
+    localStorage.dropbox_access = undefined;
+}
+
 function getAccessCode() {
-	dropboxAuth.getAccessCode($("#appKey").val());
+    dropboxAuth.getAccessCode($("#appKey").val());
 }
-
-function setAccessCode() {
-    localStorage.accessCode = $("#accessCode").val();
-}
-
 
 function getAuth() {
-	dropboxAuth.getAuth($("#accessCode").val(), $("#appKey").val(), $("#appSecret").val())
+    dropboxAuth.getAuth($("#accessCode").val(), $("#appKey").val(), $("#appSecret").val())
         .then(function(result) {
             console.dir(result);
             localStorage.dropbox_access = JSON.stringify(result);
-        	$("#token").val(result.access_token);
-        	window.dropbox = new Dropbox($("#token").val());
+            $("#token").val(result.access_token);
+            hasCreds();
+            window.dropbox = new Dropbox($("#token").val());
         })
         .fail(function(error) {
             console.error('Error Loading...' + error);
             console.dir(error);
+            resetCreds();
+            $("#accessCode").val('');
             alert(error);
         });
 }

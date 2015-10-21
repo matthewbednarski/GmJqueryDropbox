@@ -1,32 +1,49 @@
 <!--<!doctype html>-->
 <html>
-    <head>
-        <meta charset="utf-8">
-        <script type="text/javascript" src="js/jquery-1.9.1.js"></script>
- 		<script src="js/lodash.js"></script>
- 		<script src="js/q.js" ></script> 
-        <script type="text/javascript" src="js/dropbox.jquery.js"></script>
-        <script type="text/javascript" src="js/main.js"></script>
-        <link type="text/css" rel="stylesheet" href="css/styles.css" />
-    </head>
-    <body>
-        <div id="loginDropbox">
+
+<head>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="js/jquery-1.9.1.js"></script>
+    <script src="js/lodash.js"></script>
+    <script src="js/q.js"></script>
+    <script type="text/javascript" src="js/dropbox.jquery.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    <link type="text/css" rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+    <div id="loginDropbox">
+        <div class="creds-container">
             <div id="row">
-               <input type="text" id="appKey" class="inputLogin" onchange="setAppKey()" placeholder="App Key"/>
-               <input type="text" id="appSecret" class="input01" onchange="setAppSecret()" placeholder="App Secret"/>
+                <input type="text" id="appKey" class="inputLogin" placeholder="App Key" />
+                <input type="text" id="appSecret" class="input01" placeholder="App Secret" />
             </div>
             <div class="row">
-                <input type="button" id="btGetAccessCode" value="Get Access Code" onclick="getAccessCode()"/>
+                <input type="button" id="btGetAccessCode" value="Get Access Code" onclick="getAccessCode()"
+                />
             </div>
             <div id="row">
-               <input type="text" id="accessCode" class="input02" onchange="setAccessCode()" placeholder="Access Code"/>
+                <input type="text" id="accessCode" class="input02" placeholder="Access Code" />
             </div>
             <div class="row">
-                <input type="button" id="btGetAuth" value="Get Auth" onclick="getAuth()"/>
+                <input type="button" id="btGetAuth" value="Get Auth" onclick="getAuth()" />
             </div>
-            <div id="row">
-               <input type="text" id="token" class="input02" placeholder="Access Token"/>
-            </div>
+        	<div id="row">
+            	<input type="text" id="token" class="input02" placeholder="Access Token" />
+        	</div>
         </div>
-    </body>
+		<div class="has-token-indicator" >
+        	<div id="row">
+				<label>Using a dropbox token</label>
+            	<input type="button" id="btGetAuth" value="Reset Auth" onclick="resetCreds()" />
+   			</div>
+   		</div>
+		<div class="file-list" >
+        	<div id="row">
+				<label>List of files</label>
+   			</div>
+   		</div>
+   		
+</body>
+
 </html>
