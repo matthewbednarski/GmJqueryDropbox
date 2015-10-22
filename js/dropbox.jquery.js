@@ -8,8 +8,7 @@
  * per window.Q
  * <script src="https://cdnjs.cloudflare.com/ajax/libs/q.js/1.4.1/q.js" ></script>
  * o
- * <script src="https://cdnjs.cloudflare.com/ajax/libs/q.js/1.4.1/q.min.js
- *
+ * <script src="https://cdnjs.cloudflare.com/ajax/libs/q.js/1.4.1/q.min.js *
  * per window._
  * <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.0/lodash.js"></script>
  * o
@@ -54,10 +53,22 @@
 
         var access_token = token;
         return {
-            userInfo: userInfo,
-            getFile: getFile,
-            files: listFiles,
-            putFile: putFile
+            user: {
+                userInfo: userInfo
+            },
+            basic: {
+                getFile: getFile,
+                files: listFiles,
+                getFiles: listFiles,
+                putFile: putFile
+            },
+            fileOps: {
+                move: moveFile,
+                copy: copyFile,
+                deleteFile: deleteFile,
+                remove: deleteFile,
+                createFolder: createFolder
+            }
         };
 
 
@@ -74,16 +85,19 @@
             }).then(function(res) {
                 def.resolve(res);
             }).fail(function(res) {
-                console.error(res);
                 def.reject(res);
             });
 
             return def.promise;
         }
 
-        function listFiles() {
+        function listFiles(path) {
             var def = Q.defer();
             var url = 'https://api.dropboxapi.com/1/metadata/auto/';
+            if (path !== undefined) {
+                url += path;
+
+            }
             $.ajax({
                 method: 'GET',
                 url: url,
@@ -104,18 +118,29 @@
 
         function getFile(content) {
             var def = Q.defer();
-            var url = 'https://content.dropboxapi.com/1/files/auto/';
+            var url = 'https://content.dropboxapi.com/1/files/auto';
             $.ajax({
                 type: 'GET',
                 url: url + content.path,
+                dataType: 'blob',
                 beforeSend: function(request) {
                     request.setRequestHeader("Authorization", 'Bearer ' + access_token);
                     request.setRequestHeader("Accept", content.mime_type);
                 }
-            }).then(function(res) {
-                def.resolve(res);
+            }).then(function(res, a, b, c) {
+                if (res !== undefined) {
+                    var name = content.path.substring(1);
+                    var file = new File([res], name, {
+                        type: res.type
+                    });
+                    var url = URL.createObjectURL(file);
+                    def.resolve({
+                        blob: res,
+                        file: file,
+                        url: url
+                    });
+                }
             }).fail(function(res) {
-                console.error(res);
                 def.reject(res);
             });
 
@@ -125,17 +150,16 @@
         function putFile(file) {
             var defer = Q.defer();
             var url = 'https://content.dropboxapi.com/1/files_put/auto/';
-            console.log(file);
-            console.log(file[0].value);
-            var filepath = file[0].value;
+            var filepath = file.name;
             var filename = filepath.replace(/^.*?([^\\\/]*)$/, '$1');
             url += filename;
             var fd = new FormData();
-            fd.append('file', file[0].files[0], filename);
+            fd.append('file', file, filename);
             $.ajax({
                     type: 'PUT',
                     url: url,
                     data: fd,
+                    dataType: 'JSON',
                     processData: false,
                     contentType: false,
                     beforeSend: function(request) {
@@ -143,15 +167,71 @@
                     }
                 })
                 .then(function(res) {
-                    console.log(res);
                     defer.resolve(res);
                 })
                 .fail(function(res) {
-                    console.error(res);
                     defer.reject(res);
                 });
-            return def.promise;
+            return defer.promise;
         }
+
+        function moveFile(from, to) {
+        	var data = {
+        		root : 'auto',
+        		from_path : from,
+        		to_path : to
+			};
+			return _operation('move', data);
+        }
+
+        function copyFile(from, to) {
+        	var data = {
+        		root : 'auto',
+        		from_path : from,
+        		to_path : to
+			};
+			return _operation('copy', data);
+        }
+
+        function deleteFile(filePath) {
+        	var data = {
+        		root : 'auto',
+        		path : filePath
+			};
+			return _operation('delete', data);
+        }
+
+        function createFolder(folderPath) {
+        	var data = {
+        		root : 'auto',
+        		path : filePath
+			};
+			return _operation('create_folder', data);
+        }
+
+        function _operation(type, data) {
+            var defer = Q.defer();
+            var url = 'https://api.dropboxapi.com/1/fileops/' + type;
+            $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: JSON.stringify(data),
+                    dataType: 'JSON',
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function(request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + access_token);
+                    }
+                })
+                .then(function(res) {
+                    defer.resolve(res);
+                })
+                .fail(function(res) {
+                    defer.reject(res);
+                });
+            return defer.promise;
+        }
+
     }
     window.DropboxAuth = DropboxAuth;
     window.Dropbox = Dropbox;

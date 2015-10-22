@@ -4,6 +4,8 @@
 <head>
     <meta charset="utf-8">
     <script type="text/javascript" src="js/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="js/jquery.ajax.blob.js"></script>
+    <script type="text/javascript" src="js/jquery.fileupload.js"></script>
     <script src="js/lodash.js"></script>
     <script src="js/q.js"></script>
     <script type="text/javascript" src="js/dropbox.jquery.js"></script>
@@ -28,22 +30,30 @@
             <div class="row">
                 <input type="button" id="btGetAuth" value="Get Auth" onclick="getAuth()" />
             </div>
-        	<div id="row">
-            	<input type="text" id="token" class="input02" placeholder="Access Token" />
-        	</div>
+            <div id="row">
+                <input type="text" id="token" class="input02" placeholder="Access Token" />
+            </div>
         </div>
-		<div class="has-token-indicator" >
-        	<div id="row">
-				<label>Using a dropbox token</label>
-            	<input type="button" id="btGetAuth" value="Reset Auth" onclick="resetCreds()" />
-   			</div>
-   		</div>
-		<div class="file-list" >
-        	<div id="row">
-				<label>List of files</label>
-   			</div>
-   		</div>
-   		
+        <div class="has-token-indicator">
+            <div id="row">
+                <label>Using a dropbox token</label>
+                <input type="button" id="btGetAuth" value="Reset Auth" onclick="resetCreds()" />
+            </div>
+            <div id="row">
+                <input type="button" id="btGetFiles" value="List Files" onclick="getFiles()" />
+            </div>
+        </div>
+        <div class="file-upload">
+            <div id="row">
+                <input id="fileupload" type="file" >
+            </div>
+        </div>
+        <div class="file-list">
+            <div id="row">
+                <label>List of files</label>
+            </div>
+            <ul id="dropbox-files"></ul>
+        </div>
 </body>
 
 </html>
