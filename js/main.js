@@ -67,7 +67,7 @@ function resetCreds() {
 }
 
 function loadFiles() {
-	setupList();
+    setupList();
     getFiles().then(handelFiles);
 }
 
@@ -175,16 +175,31 @@ function getFile(path, mime_type) {
             mime_type: mime_type
         })
         .then(function(res) {
-            console.log(res);
-            if (res !== undefined && res.url !== undefined) {
-                window.open(res.url);
-            }
-            defer.resolve(res);
+            if (res !== undefined) {
+                var name = path.substring(1);
+                var file = new File([res], name, {
+                    type: res.type
+                });
+                var url = URL.createObjectURL(file);
+                defer.resolve({
+                    blob: res,
+                    file: file,
+                    url: url
+                });
+            }else {
+				defer.reject(new Error('Result is undefined'));
+			}
         })
         .fail(function(err) {
             console.error(err);
             defer.reject(err);
         });
+    defer.promise.then(function(res) {
+        console.log(res);
+        if (res !== undefined && res.url !== undefined) {
+            window.open(res.url);
+        }
+    });
     return defer.promise;
 }
 
