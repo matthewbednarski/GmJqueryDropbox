@@ -215,11 +215,11 @@ function addFile(file) {
  *
  */
 function getAccessCode() {
-    $.dropboxAuth.getAccessCode($("#appKey").val());
+    $.dropboxAuth.getAccessCode($('#appKey').val());
 }
 
 function getAuth() {
-    $.dropboxAuth.getAuth($("#accessCode").val(), $("#appKey").val(), $("#appSecret").val())
+    $.dropboxAuth.getAuth($('#accessCode').val(), $('#appKey').val(), $('#appSecret').val())
         .then(function(result) {
             console.dir(result);
             localStorage.dropbox_access = JSON.stringify(result);
@@ -230,7 +230,7 @@ function getAuth() {
             console.error('Error Loading...' + error);
             console.dir(error);
             resetCreds();
-            $("#accessCode").val('');
+            $('#accessCode').val('');
         });
 }
 

@@ -91,7 +91,7 @@
             },
             basic: {
                 getFile: getFile,
-                getTextFile: getTextFile,
+                getFileText: getFileText,
                 files: listFiles,
                 getFiles: listFiles,
                 addFile: putFile,
