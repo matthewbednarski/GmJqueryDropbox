@@ -15,11 +15,24 @@ $(document).ready(function(event) {
             has_creds = true;
         }
     }
+    if (has_creds) {
+        getFiles();
 
-    if (!has_creds) {
+    } else {
         window.dropboxAuth = new DropboxAuth();
     }
+
 }); // Fine document
+
+function getFiles() {
+    dropbox.files()
+        .then(function(result) {
+            console.dir(result);
+        })
+        .fail(function(err) {
+            console.dir(err);
+        });
+}
 
 
 function hasCreds() {
