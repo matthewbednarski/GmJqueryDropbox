@@ -95,7 +95,9 @@
                 files: listFiles,
                 getFiles: listFiles,
                 addFile: putFile,
-                putFile: putFile
+                putFile: putFile,
+                addFileText: putFileText,
+                putFileText: putFileText
             },
             fileOps: {
                 move: moveFile,
@@ -236,6 +238,35 @@
                 dataType: 'JSON',
                 processData: false,
                 contentType: false,
+                beforeSend: function(request) {
+                    request.setRequestHeader("Authorization", 'Bearer ' + access_token);
+                }
+            });
+        }
+
+        /**
+         *
+         * Adds a text file to Dropbox
+         *
+         * @param sFilePath     string filepath of the file to save
+         * @param sBody         string body of file to save
+         * @param sMimeType     optional mime-type of the file to save; default is 'application/json'
+         *
+         */
+        function putFileText(sFilePath, sBody, sMimeType) {
+        	if( sMimeType === undefined){
+        		sMimeType = 'application/json';
+			}
+            var url = 'https://content.dropboxapi.com/1/files_put/auto/';
+            sFilePath = sFilePath.replace(/^.*?([^\\\/]*)$/, '$1');
+            url += sFilePath;
+            return $.ajax({
+                type: 'PUT',
+                url: url,
+                data: sBody,
+                dataType: 'JSON',
+                processData: false,
+                contentType: sMimeType,
                 beforeSend: function(request) {
                     request.setRequestHeader("Authorization", 'Bearer ' + access_token);
                 }
