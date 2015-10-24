@@ -10,9 +10,7 @@
         dropboxAuth: new DropboxAuth(),
         dropbox: new Dropbox()
     });
-
-    /**
-     *
+/** *
      * Contains the methods necessary for obtaining a Dropbox oauth token
      *
      */
@@ -260,8 +258,6 @@
             var url = 'https://content.dropboxapi.com/1/files_put/auto/';
             sFilePath = sFilePath.replace(/^.*?([^\\\/]*)$/, '$1');
             url += sFilePath;
-                // dataType: 'JSON',
-                // processData: false,
             return $.ajax({
                 type: 'PUT',
                 url: url,
