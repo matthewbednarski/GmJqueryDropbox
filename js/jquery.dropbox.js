@@ -260,12 +260,12 @@
             var url = 'https://content.dropboxapi.com/1/files_put/auto/';
             sFilePath = sFilePath.replace(/^.*?([^\\\/]*)$/, '$1');
             url += sFilePath;
+                // dataType: 'JSON',
+                // processData: false,
             return $.ajax({
                 type: 'PUT',
                 url: url,
                 data: sBody,
-                dataType: 'JSON',
-                processData: false,
                 contentType: sMimeType,
                 beforeSend: function(request) {
                     request.setRequestHeader("Authorization", 'Bearer ' + access_token);
