@@ -256,7 +256,6 @@
         		sMimeType = 'application/json';
 			}
             var url = 'https://content.dropboxapi.com/1/files_put/auto/';
-            sFilePath = sFilePath.replace(/^.*?([^\\\/]*)$/, '$1');
             url += sFilePath;
             return $.ajax({
                 type: 'PUT',
@@ -328,7 +327,7 @@
         function createFolder(folderPath) {
             var data = {
                 root: 'auto',
-                path: filePath
+                path: folderPath
             };
             return _operation('create_folder', data);
         }
