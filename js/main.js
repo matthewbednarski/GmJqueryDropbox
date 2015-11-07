@@ -110,7 +110,6 @@ function contentsToList(contents) {
 }
 
 function handelFiles(filesObj) {
-    var defer = Q.defer();
     _.merge(f, filesObj.files);
     Q.allSettled(filesObj.promises)
         .done(function(filesArr) {
@@ -121,7 +120,6 @@ function handelFiles(filesObj) {
 
     var html = contentsToList(filesObj.files);
     appendList(html);
-    return defer.promise;
 }
 
 /**
@@ -135,8 +133,7 @@ function getFiles(path) {
     } else if (path === undefined) {
         _.remove(window.f);
     }
-    var defer = Q.defer();
-    $.dropbox.basic.getFiles(path)
+    return $.dropbox.basic.getFiles(path)
         .then(function(files) {
             // console.dir(files.contents);
             var promises = _.chain(files.contents)
@@ -156,21 +153,15 @@ function getFiles(path) {
                     return content;
                 })
                 .value();
-            defer.resolve({
+            return {
                 files: files,
                 promises: promises
-            });
-        })
-        .fail(function(err) {
-            console.error(err);
-            defer.reject(err);
+            };
         });
-    return defer.promise;
 }
 
 function getFile(path, mime_type) {
-    var defer = Q.defer();
-    $.dropbox.basic.getFile({
+    var gotten = $.dropbox.basic.getFile({
             path: path,
             mime_type: mime_type
         })
@@ -181,26 +172,21 @@ function getFile(path, mime_type) {
                     type: res.type
                 });
                 var url = URL.createObjectURL(file);
-                defer.resolve({
+                return {
                     blob: res,
                     file: file,
                     url: url
-                });
+                };
             }else {
-				defer.reject(new Error('Result is undefined'));
+				throw new Error('Result is undefined'));
 			}
-        })
-        .fail(function(err) {
-            console.error(err);
-            defer.reject(err);
         });
-    defer.promise.then(function(res) {
+    gotten.then(function(res) {
         console.log(res);
         if (res !== undefined && res.url !== undefined) {
             window.open(res.url);
         }
     });
-    return defer.promise;
 }
 
 function addFile(file) {
