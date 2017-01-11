@@ -249,9 +249,9 @@
             var filename = filepath.replace(/^.*?([^\\\/]*)$/, '$1');
             filename = path + filename;
             var oPath = {
-                path: filename
+                path: filename,
+                mode: 'overwrite'
             };
-            //url += filename;
             var fd = new FormData();
             fd.append('file', file, filename);
             return $.ajax({
@@ -284,9 +284,6 @@
             }
             if (!(typeof sBody === 'string')) {
                 sBody = JSON.stringify(sBody);
-            }
-            if (sMimeType === undefined) {
-                sMimeType = 'application/json';
             }
             var url = 'https://content.dropboxapi.com/2/files/upload';
             var dropboxApiArg = {
