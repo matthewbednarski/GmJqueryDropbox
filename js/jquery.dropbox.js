@@ -89,12 +89,12 @@
             },
             basic: {
                 getFile: getFile,
-                getFileText: getFileText, //Da verificare
+                getFileText: getFileText,
                 files: listFiles,
                 getFiles: listFiles,
                 addFile: putFile,
                 putFile: putFile,
-                addFileText: putFileText, //Da verificare
+                addFileText: putFileText,
                 putFileText: putFileText
             },
             fileOps: {
@@ -190,7 +190,7 @@
         function getFile(content) {
             console.log("getFile");
             var url = 'https://content.dropboxapi.com/2/files/download';
-            var oPath = {
+            var dropboxApiArg = {
                 path: content.path
             };
             return $.ajax({
@@ -200,7 +200,7 @@
                 beforeSend: function(request) {
                     request.setRequestHeader("Authorization", 'Bearer ' + access_token);
                     request.setRequestHeader("Accept", content.mime_type);
-                    request.setRequestHeader("Dropbox-API-Arg", JSON.stringify(oPath));
+                    request.setRequestHeader("Dropbox-API-Arg", JSON.stringify(dropboxApiArg));
                 }
             });
         }
@@ -217,7 +217,7 @@
         function getFileText(content) {
             console.log("getFileText");
             var url = 'https://content.dropboxapi.com/2/files/download';
-            var oPath = {
+            var dropboxApiArg = {
                 path: content.path
             };
             return $.ajax({
@@ -226,7 +226,7 @@
                 beforeSend: function(request) {
                     request.setRequestHeader("Authorization", 'Bearer ' + access_token);
                     request.setRequestHeader("Accept", content.mime_type);
-                    request.setRequestHeader("Dropbox-API-Arg", JSON.stringify(oPath));
+                    request.setRequestHeader("Dropbox-API-Arg", JSON.stringify(dropboxApiArg));
                 }
             });
         }
@@ -248,7 +248,7 @@
             var filepath = file.name;
             var filename = filepath.replace(/^.*?([^\\\/]*)$/, '$1');
             filename = path + filename;
-            var oPath = {
+            var dropboxApiArg = {
                 path: filename,
                 mode: 'overwrite'
             };
@@ -263,7 +263,7 @@
                 contentType: false,
                 beforeSend: function(request) {
                     request.setRequestHeader("Authorization", 'Bearer ' + access_token);
-                    request.setRequestHeader("Dropbox-API-Arg", JSON.stringify(oPath));
+                    request.setRequestHeader("Dropbox-API-Arg", JSON.stringify(dropboxApiArg));
                     request.setRequestHeader("Content-Type", 'application/octet-stream');
                 }
             });
@@ -282,7 +282,7 @@
             if (!sFilePath.startsWith('/')) {
                 sFilePath = '/' + sFilePath;
             }
-            if (!(typeof sBody === 'string')) {
+            if ((typeof sBody ) !== 'string') {
                 sBody = JSON.stringify(sBody);
             }
             var url = 'https://content.dropboxapi.com/2/files/upload';
@@ -363,24 +363,24 @@
          */
         function createFolder(folderPath) {
             var data = {
-                root: 'auto',
                 path: folderPath
             };
             return _operation('create_folder', data);
         }
 
         function _operation(type, data) {
-            //var url = 'https://api.dropboxapi.com/1/fileops/' + type;
+            var sData = data;
+            if ( (typeof data) !== 'string' ){
+                sData = JSON.stringify( data );
+            }
             var url = 'https://api.dropboxapi.com/2/files/' + type;
             return $.ajax({
                 type: 'POST',
                 url: url,
-                data: $.param(data),
-                dataType: 'JSON',
-                processData: false,
+                data: sData,
                 contentType: false,
                 beforeSend: function(request) {
-                    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                    request.setRequestHeader('Content-Type', 'application/json');
                     request.setRequestHeader("Authorization", 'Bearer ' + access_token);
                 }
             });

@@ -26,10 +26,22 @@ $(document).ready(function(event) {
  */
 function setupFileUpload() {
     $('#fileupload').change(function(event) {
+        $.dropbox.fileOps.createFolder('/test/lucky1')
+        .then(function(){
+            loadFiles();
+
+        });
+        /*
+        $.dropbox.basic.addFileText('/test/folder/123/test.json', this)
+        .then(function(){
+            loadFiles();
+
+        });
         var file = _.get($('#fileupload'), '[0].files[0]');
         if (file !== undefined) {
             addFile(file);
         }
+        */
     });
 }
 
