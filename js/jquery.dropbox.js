@@ -226,7 +226,7 @@
                 beforeSend: function(request) {
                     request.setRequestHeader("Authorization", 'Bearer ' + access_token);
                     request.setRequestHeader("Accept", content.mime_type);
-                    request.setRequestHeader("Dropbox-API-Arg", oPath);
+                    request.setRequestHeader("Dropbox-API-Arg", JSON.stringify(oPath));
                 }
             });
         }
