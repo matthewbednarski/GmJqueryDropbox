@@ -136,18 +136,34 @@ function getFiles(path) {
     return $.dropbox.basic.getFiles(path)
         .then(function(files) {
             // console.dir(files.contents);
-            var promises = _.chain(files.contents)
-                .filter(function(content) {
-                    return content.is_dir;
+            var entries = _.chain(files.entries)
+                .map(function(content) {
+                	content.path = content.path_lower;
+                	return content;
                 })
                 .map(function(content) {
+					if(content['.tag'] === 'folder'){
+						content.is_dir = true;
+					}else{
+						content.is_dir = false;
+					}
+                	return content;
+                })
+                .value();
+
+            var promises = _.chain(files.entries)
+                .filter(function(content) {
+					return content.is_dir;
+                })
+                .map(function(content) {
+                	//console.log(content);
                     var p = getFiles(content.path)
                     return p;
                 })
                 .value();
-            var files = _.chain(files.contents)
+            var files = _.chain(files.entries)
                 .filter(function(content) {
-                    return !content.is_dir;
+					return !content.is_dir;
                 })
                 .map(function(content) {
                     return content;
@@ -178,7 +194,7 @@ function getFile(path, mime_type) {
                     url: url
                 };
             }else {
-				throw new Error('Result is undefined'));
+				throw new Error('Result is undefined');
 			}
         });
     gotten.then(function(res) {

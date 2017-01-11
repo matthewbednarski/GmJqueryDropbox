@@ -10,7 +10,7 @@
         dropboxAuth: new DropboxAuth(),
         dropbox: new Dropbox()
     });
-/** *
+    /** *
      * Contains the methods necessary for obtaining a Dropbox oauth token
      *
      */
@@ -35,7 +35,7 @@
          *
          */
         function getAccessCode(client_id) {
-            var url = 'https://www.dropbox.com/1/oauth2/authorize';
+            var url = 'https://www.dropbox.com/oauth2/authorize';
             window.open(url + '/?client_id=' + client_id + '&response_type=code');
         }
 
@@ -54,7 +54,7 @@
                 client_id: client_id,
                 client_secret: client_secret
             };
-            var url = 'https://api.dropboxapi.com/1/oauth2/token';
+            var url = 'https://api.dropboxapi.com/oauth2/token';
             return $.ajax({
                 type: 'POST',
                 url: url,
@@ -136,7 +136,7 @@
          *
          */
         function userInfo() {
-            var url = 'https://api.dropboxapi.com/1/account/info';
+            var url = 'https://api.dropboxapi.com/2/users/get_current_account';
             return $.ajax({
                 type: 'GET',
                 url: url,
@@ -155,19 +155,25 @@
          *
          */
         function listFiles(path) {
-            var url = 'https://api.dropboxapi.com/1/metadata/auto/';
-            if (path !== undefined) {
-                url += path;
-            }
+            // var url = 'https://api.dropboxapi.com/2/files/get_metadata';
+            var url = 'https://api.dropboxapi.com/2/files/list_folder';
+            if(path === undefined || path === ''){
+            	path = ''
+			}
+            var data = {
+                "path": path,
+                "include_media_info": false,
+                "include_deleted": false,
+                "include_has_explicit_shared_members": false
+            };
+            console.log(JSON.stringify(data));
             return $.ajax({
-                method: 'GET',
+                method: 'POST',
                 url: url,
-                dataType: "JSON",
-                data: {
-                    list: true
-                },
+                data: JSON.stringify(data),
                 beforeSend: function(request) {
                     request.setRequestHeader("Authorization", 'Bearer ' + access_token);
+                    request.setRequestHeader("Content-Type", 'application/json; charset=utf-8');
                 }
             });
         }
@@ -182,14 +188,19 @@
          *
          */
         function getFile(content) {
-            var url = 'https://content.dropboxapi.com/1/files/auto';
+            console.log("getFile");
+            var url = 'https://content.dropboxapi.com/2/files/download';
+            var oPath = {
+                path: content.path
+            };
             return $.ajax({
-                type: 'GET',
-                url: url + content.path,
+                type: 'POST',
+                url: url,
                 dataType: 'blob',
                 beforeSend: function(request) {
                     request.setRequestHeader("Authorization", 'Bearer ' + access_token);
                     request.setRequestHeader("Accept", content.mime_type);
+                    request.setRequestHeader("Dropbox-API-Arg", JSON.stringify(oPath));
                 }
             });
         }
@@ -204,13 +215,18 @@
          *
          */
         function getFileText(content) {
-            var url = 'https://content.dropboxapi.com/1/files/auto';
+            console.log("getFileText");
+            var url = 'https://content.dropboxapi.com/2/files/download';
+            var oPath = {
+                path: content.path
+            };
             return $.ajax({
-                type: 'GET',
-                url: url + content.path,
+                type: 'POST',
+                url: url,
                 beforeSend: function(request) {
                     request.setRequestHeader("Authorization", 'Bearer ' + access_token);
                     request.setRequestHeader("Accept", content.mime_type);
+                    request.setRequestHeader("Dropbox-API-Arg", oPath);
                 }
             });
         }
@@ -223,14 +239,18 @@
          *
          */
         function putFile(file) {
-            var url = 'https://content.dropboxapi.com/1/files_put/auto/';
+            //var url = 'https://content.dropboxapi.com/1/files_put/auto/';
+            var url = 'https://content.dropboxapi.com/2/files/upload';
             var filepath = file.name;
             var filename = filepath.replace(/^.*?([^\\\/]*)$/, '$1');
-            url += filename;
+            var oPath = {
+                path: filename
+            };
+            //url += filename;
             var fd = new FormData();
             fd.append('file', file, filename);
             return $.ajax({
-                type: 'PUT',
+                type: 'POST',
                 url: url,
                 data: fd,
                 dataType: 'JSON',
@@ -238,6 +258,8 @@
                 contentType: false,
                 beforeSend: function(request) {
                     request.setRequestHeader("Authorization", 'Bearer ' + access_token);
+                    request.setRequestHeader("Dropbox-API-Arg", JSON.stringify(oPath));
+                    request.setRequestHeader("Content-Type", 'application/octet-stream');
                 }
             });
         }
@@ -252,10 +274,12 @@
          *
          */
         function putFileText(sFilePath, sBody, sMimeType) {
-        	if( sMimeType === undefined){
-        		sMimeType = 'application/json';
-			}
-            var url = 'https://content.dropboxapi.com/1/files_put/auto/';
+            if (sMimeType === undefined) {
+                sMimeType = 'application/json';
+            }
+            //var url = 'https://content.dropboxapi.com/1/files_put/auto/';
+            var url = 'https://content.dropboxapi.com/2/files/upload/auto/';
+            //sFilePath = sFilePath.replace(/^.*?([^\\\/]*)$/, '$1');
             url += sFilePath;
             return $.ajax({
                 type: 'PUT',
@@ -333,7 +357,8 @@
         }
 
         function _operation(type, data) {
-            var url = 'https://api.dropboxapi.com/1/fileops/' + type;
+            //var url = 'https://api.dropboxapi.com/1/fileops/' + type;
+            var url = 'https://api.dropboxapi.com/2/files/' + type;
             return $.ajax({
                 type: 'POST',
                 url: url,
