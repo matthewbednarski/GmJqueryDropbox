@@ -203,6 +203,7 @@ function getFile(path, mime_type) {
             window.open(res.url);
         }
     });
+    return gotten;
 }
 
 function addFile(file) {

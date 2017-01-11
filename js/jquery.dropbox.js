@@ -89,12 +89,12 @@
             },
             basic: {
                 getFile: getFile,
-                getFileText: getFileText,
+                getFileText: getFileText, //Da verificare
                 files: listFiles,
                 getFiles: listFiles,
                 addFile: putFile,
                 putFile: putFile,
-                addFileText: putFileText,
+                addFileText: putFileText, //Da verificare
                 putFileText: putFileText
             },
             fileOps: {
@@ -157,9 +157,9 @@
         function listFiles(path) {
             // var url = 'https://api.dropboxapi.com/2/files/get_metadata';
             var url = 'https://api.dropboxapi.com/2/files/list_folder';
-            if(path === undefined || path === ''){
-            	path = ''
-			}
+            if (path === undefined || path === '') {
+                path = ''
+            }
             var data = {
                 "path": path,
                 "include_media_info": false,
@@ -238,11 +238,16 @@
          * @param file    the File to add
          *
          */
-        function putFile(file) {
-            //var url = 'https://content.dropboxapi.com/1/files_put/auto/';
+        function putFile(file, path) {
+            if (path === undefined) {
+                path = '/';
+            } else if (path.startsWith('/')) {
+                path = '/' + path;
+            }
             var url = 'https://content.dropboxapi.com/2/files/upload';
             var filepath = file.name;
             var filename = filepath.replace(/^.*?([^\\\/]*)$/, '$1');
+            filename = path + filename;
             var oPath = {
                 path: filename
             };
@@ -274,20 +279,31 @@
          *
          */
         function putFileText(sFilePath, sBody, sMimeType) {
+            if (!sFilePath.startsWith('/')) {
+                sFilePath = '/' + sFilePath;
+            }
+            if (!(typeof sBody === 'string')) {
+                sBody = JSON.stringify(sBody);
+            }
             if (sMimeType === undefined) {
                 sMimeType = 'application/json';
             }
-            //var url = 'https://content.dropboxapi.com/1/files_put/auto/';
-            var url = 'https://content.dropboxapi.com/2/files/upload/auto/';
-            //sFilePath = sFilePath.replace(/^.*?([^\\\/]*)$/, '$1');
-            url += sFilePath;
+            var url = 'https://content.dropboxapi.com/2/files/upload';
+            var dropboxApiArg = {
+                path: sFilePath,
+                mode: 'overwrite'
+            };
             return $.ajax({
-                type: 'PUT',
+                type: 'POST',
                 url: url,
                 data: sBody,
-                contentType: sMimeType,
+                dataType: 'JSON',
+                processData: false,
+                contentType: false,
                 beforeSend: function(request) {
                     request.setRequestHeader("Authorization", 'Bearer ' + access_token);
+                    request.setRequestHeader("Dropbox-API-Arg", JSON.stringify(dropboxApiArg));
+                    request.setRequestHeader("Content-Type", 'application/octet-stream');
                 }
             });
         }
@@ -375,3 +391,4 @@
 
     }
 })(window.jQuery);
+
