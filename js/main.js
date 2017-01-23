@@ -46,9 +46,9 @@ function setupFileUpload() {
 }
 
 function setupList() {
-    $('ul#dropbox-files').off('click', 'li.dropbox-file');
-    $('ul#dropbox-files').empty();
-    $('ul#dropbox-files').on('click', 'li.dropbox-file', function(event) {
+    $('#dropbox-files').off('click', '.dropbox-file');
+    $('#dropbox-files').empty();
+    $('#dropbox-files').on('click', '.dropbox-file', function(event) {
         var target = $(event.target);
         var data = target.data();
         getFile(data.path, data.mimeType)
@@ -84,13 +84,13 @@ function loadFiles() {
 }
 
 function appendList(html) {
-    $('ul#dropbox-files').append(html);
+    $('#dropbox-files').append(html);
 }
 
 function contentsToList(contents) {
     var template = {
-        li_file: _.template('<li class="dropbox-file"><a id="<%- file_source %>" data-path="<%- file_path %>" data-is-dir="<%- is_dir %>" data-mime-type="<%- file_mime_type %>" ><%- file_source %></a></li>'),
-        li_dir: _.template('<li class="dropbox-file"><a id="<%- file_source %>" data-path="<%- file_path %>" data-is-dir="<%- is_dir %>" ><%- file_source %></a></li>')
+        li_file: _.template('<div class="column column-block dropbox-file" ><a id="<%- file_source %>" data-path="<%- file_path %>" data-is-dir="<%- is_dir %>" data-mime-type="<%- file_mime_type %>" ><%- file_source %></a></div>'),
+        li_dir: _.template('<div class="column column-block dropbox-file" ><a id="<%- file_source %>" data-path="<%- file_path %>" data-is-dir="<%- is_dir %>" ><%- file_source %></a></div>')
     };
     var li_html = _.chain(contents)
         .filter(function(content) {

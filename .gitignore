@@ -1,2 +1,7 @@
 .DS_Store
 libs/
+/operator.txt
+.idea/
+operator.txt
+out.json
+out.txt

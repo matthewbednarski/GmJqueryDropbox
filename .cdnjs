@@ -73,6 +73,47 @@
           "js/plugins/foundation.zf.responsiveAccordionTabs.js",
           "js/plugins/foundation.zf.responsiveAccordionTabs.min.js"
         ]
+      },
+      "q.js": {
+        "version": "1.4.1",
+        "files": [
+          "q.js",
+          "q.min.js"
+        ]
+      },
+      "lodash.js": {
+        "version": "4.17.4",
+        "files": [
+          "lodash.js",
+          "lodash.min.js",
+          "lodash.min.js.map"
+        ]
+      },
+      "jquery": {
+        "version": "1.9.1",
+        "files": [
+          "jquery.js",
+          "jquery.min.js",
+          "jquery.min.map"
+        ]
+      },
+      "twitter-bootstrap": {
+        "version": "3.3.0",
+        "files": [
+          "css/bootstrap-theme.css",
+          "css/bootstrap-theme.css.map",
+          "css/bootstrap-theme.min.css",
+          "css/bootstrap.css",
+          "css/bootstrap.css.map",
+          "css/bootstrap.min.css",
+          "fonts/glyphicons-halflings-regular.eot",
+          "fonts/glyphicons-halflings-regular.svg",
+          "fonts/glyphicons-halflings-regular.ttf",
+          "fonts/glyphicons-halflings-regular.woff",
+          "js/bootstrap.js",
+          "js/bootstrap.min.js",
+          "js/npm.js"
+        ]
       }
     }
   }

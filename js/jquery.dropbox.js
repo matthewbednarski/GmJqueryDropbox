@@ -155,7 +155,6 @@
          *
          */
         function listFiles(path) {
-            // var url = 'https://api.dropboxapi.com/2/files/get_metadata';
             var url = 'https://api.dropboxapi.com/2/files/list_folder';
             if (path === undefined || path === '') {
                 path = ''
@@ -166,7 +165,6 @@
                 "include_deleted": false,
                 "include_has_explicit_shared_members": false
             };
-            console.log(JSON.stringify(data));
             return $.ajax({
                 method: 'POST',
                 url: url,
@@ -188,7 +186,6 @@
          *
          */
         function getFile(content) {
-            console.log("getFile");
             var url = 'https://content.dropboxapi.com/2/files/download';
             var dropboxApiArg = {
                 path: content.path
@@ -215,7 +212,6 @@
          *
          */
         function getFileText(content) {
-            console.log("getFileText");
             var url = 'https://content.dropboxapi.com/2/files/download';
             var dropboxApiArg = {
                 path: content.path
@@ -314,8 +310,13 @@
          *
          */
         function moveFile(from, to) {
+            if(!from.startsWith('/')){
+                from = '/' + from;
+            }
+            if(!to.startsWith('/')){
+                to = '/' + to;
+            }
             var data = {
-                root: 'auto',
                 from_path: from,
                 to_path: to
             };
@@ -331,8 +332,13 @@
          *
          */
         function copyFile(from, to) {
+            if(!from.startsWith('/')){
+                from = '/' + from;
+            }
+            if(!to.startsWith('/')){
+                to = '/' + to;
+            }
             var data = {
-                root: 'auto',
                 from_path: from,
                 to_path: to
             };
@@ -347,8 +353,10 @@
          *
          */
         function deleteFile(filePath) {
+            if(!filePath.startsWith('/')){
+                filePath = '/' + filePath;
+            }
             var data = {
-                root: 'auto',
                 path: filePath
             };
             return _operation('delete', data);
@@ -362,6 +370,9 @@
          *
          */
         function createFolder(folderPath) {
+            if(!folderPath.startsWith('/')){
+                folderPath = '/' + folderPath;
+            }
             var data = {
                 path: folderPath
             };
