@@ -5,8 +5,8 @@
  * All API methods return a promise unless specified otherwise.
  *
  */
-(function($) {
-    jQuery.extend({
+jQuery(function($) {
+    $.extend({
         dropboxAuth: new DropboxAuth(),
         dropbox: new Dropbox()
     });
@@ -399,5 +399,5 @@
         }
 
     }
-})(window.jQuery);
+});
 
