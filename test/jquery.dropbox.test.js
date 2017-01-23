@@ -97,20 +97,113 @@
 
 
             it("$.dropbox.getFile(): Download a binary file", function(done) {
-                expect($.dropbox.hasToken()).not.toBeTruthy();
-                done();
+                var toGet = '/8ww3q2sn.pdf';
+                $.dropbox.basic.getFile({
+                    path: toGet
+                }).then(function(file) {
+                    expect(file.type).toBe('application/octet-stream');
+                    expect(file.size).toBeGreaterThan(0);
+                    done(file);
+                }).fail(function(err) {
+                    console.dir(err);
+                    done.fail(err);
+                });
             });
             it("$.dropbox.getFileText(): Download a text file", function(done) {
-                expect($.dropbox.hasToken()).not.toBeTruthy();
-                done();
+                var toAdd = 'test-for-getFileText-' + makeid();
+                $.dropbox.basic.addFileText(toAdd, toAdd)
+                    .then(function(fileAdded) {
+                        var toGet = '/' + toAdd;
+                        $.dropbox.basic.getFile({
+                            path: toGet
+                        }).then(function(file) {
+                            expect(file.type).toBe('application/octet-stream');
+                            expect(file.size).toBeGreaterThan(0);
+                            $.dropbox.fileOps.remove(toGet)
+                                .then(function(file) {
+                                    done(file);
+                                });
+                        }).fail(function(err) {
+                            console.error(err);
+                            $.dropbox.fileOps.remove(toGet)
+                                .then(function(file) {
+                                    done(file);
+                                });
+                            done.fail(err);
+                        });
+                    }).fail(function(err) {
+                        console.error(err);
+                        done.fail(err);
+                    });
             });
             it("$.dropbox.addFileText(): Add a text file", function(done) {
-                expect($.dropbox.hasToken()).not.toBeTruthy();
-                done();
+                var toAdd = 'test-for-getFileText-' + makeid();
+                $.dropbox.basic.addFileText(toAdd, toAdd)
+                    .then(function(fileAdded) {
+                        // console.dir(fileAdded);
+                        expect(fileAdded).toBeTruthy();
+                        $.dropbox.fileOps.remove(toAdd)
+                            .then(function(file) {
+                                done(file);
+                            }).fail(function(err) {
+                                console.error(err);
+                                done.fail(err);
+                            });
+                    }).fail(function(err) {
+                        console.error(err);
+                        done.fail(err);
+                    });
             });
-            it("$.dropbox.addFile(): Add a binary file", function(done) {
-                expect($.dropbox.hasToken()).not.toBeTruthy();
-                done();
+            it("$.dropbox.addFile(): Add a binary file (Blob API)", function(done) {
+                var toAdd = 'test-for-getFile-binary-blob-' + makeid();
+                var debug = {
+                    hello: "world"
+                };
+                var blob = new Blob([JSON.stringify(debug, null, 2)], {
+                    type: 'application/json'
+                });
+                $.dropbox.basic.addFile(blob, toAdd)
+                    .then(function(fileAdded) {
+                        // console.dir(fileAdded);
+                        expect(fileAdded).toBeTruthy();
+                        $.dropbox.fileOps.remove(toAdd)
+                            .then(function(file) {
+                                done(file);
+                            }).fail(function(err) {
+                                console.error(err);
+                                done.fail(err);
+                            });
+                    }).fail(function(err) {
+                        console.error(err);
+                        done.fail(err);
+                    });
+            });
+            it("$.dropbox.addFile(): Add a binary file (File API)", function(done) {
+                var toAdd = 'test-for-getFile-binary-file-' + makeid();
+                var debug = {
+                    hello: "world"
+                };
+                // var blob = new Blob([JSON.stringify(debug, null, 2)], {
+                //     type: 'application/json'
+                // });
+                var blob = new File([JSON.stringify(debug, null, 2)], toAdd, {
+                    type: 'application/json'
+                });
+                $.dropbox.basic.addFile(blob, toAdd)
+                    .then(function(fileAdded) {
+                        // console.dir(fileAdded);
+                        expect(fileAdded).toBeTruthy();
+                        $.dropbox.fileOps.remove(toAdd)
+                            .then(function(file) {
+                                done(file);
+                            }).fail(function(err) {
+                                console.error(err);
+                                done.fail(err);
+                            });
+                    }).fail(function(err) {
+                        console.error(err);
+                        done.fail(err);
+                    });
             });
 
         });

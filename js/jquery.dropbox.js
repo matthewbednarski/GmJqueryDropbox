@@ -235,15 +235,16 @@
          *
          */
         function putFile(file, path) {
-            if (path === undefined) {
-                path = '/';
-            } else if (path.startsWith('/')) {
-                path = '/' + path;
+            filename = '/';
+            if (path !== undefined && !path.startsWith('/')) {
+                filename += path;
+            }else if (path !== undefined && path.startsWith('/')) {
+                filename = path;
+            }else if(file.name !== undefined){
+                filename = file.name.replace(/^.*?([^\\\/]*)$/, '$1');
+
             }
             var url = 'https://content.dropboxapi.com/2/files/upload';
-            var filepath = file.name;
-            var filename = filepath.replace(/^.*?([^\\\/]*)$/, '$1');
-            filename = path + filename;
             var dropboxApiArg = {
                 path: filename,
                 mode: 'overwrite'
