@@ -9,10 +9,10 @@ module.exports = function(grunt) {
                 configFile: 'karma.conf.js'
             },
             version: {
-                basePath: 'build'
+                basePath: 'dist'
             },
             latest: {
-                basePath: '.'
+                basePath: 'test'
             }
         },
         jshint: {
@@ -25,47 +25,35 @@ module.exports = function(grunt) {
             main_target: {
                 files: [{
                     expand: true,
-                    cwd: 'build',
+                    cwd: 'dist',
                     src: '**/*.js',
-                    dest: 'build'
+                    dest: 'dist'
                 }]
             }
         },
-        clean: ['build'],
+        clean: ['dist'],
         copy: {
             main: {
                 files: [{
                     cwd: '.',
                     src: [
-                        'src/img/*.jpg',
-                        'src/img/*.gif',
-                        'src/img/*.png',
-                        'src/resources/**/*'
-                    ],
-                    dest: 'build',
-                    expand: true
-                }, {
-                    cwd: '.',
-                    src: [
-                        'src/*.html',
-                    ],
-                    dest: 'build',
-                    expand: true
-                }, {
-                    cwd: '.',
-                    src: [
-                        'src/latest/**/*.xml',
-                        'src/latest/**/*.js',
-                        'src/latest/**/*.json',
+                        'src/**/*.html',
+                        'src/**/*.js',
+                        'src/**/*.css',
+                        'src/**/*.xml',
+                        'src/**/*.json',
                         'src/**/*.properties',
-                        'src/latest/**/*.css'
+                        'src/**/*.svg',
+                        'src/**/*.jpg',
+                        'src/**/*.gif',
+                        'src/**/*.png'
                     ],
                     dest: '<%= pkg.version %>',
                     expand: true,
                     rename: function(dest, src) {
                         var version = dest;
-                        var topdir = src.replace(/latest/g, dest);
-                        return 'build/' + topdir;
+                        var topdir = src.replace(/src/g, dest);
+                        return 'dist/' + topdir;
                     }
                 }]
             }
@@ -73,15 +61,13 @@ module.exports = function(grunt) {
         'string-replace': {
             dist: {
                 files: {
-                    cwd: 'build',
+                    cwd: 'dist',
                     './': [
-                        'build/*.html',
-                        'build/<%= pkg.version %>/service/i18n.js',
-                        'build/<%= pkg.version %>/test/service/i18nTest.js',
-                        'build/<%= pkg.version %>/test/ui5-bootstrap.js',
-                        'build/<%= pkg.version %>/view/*.controller.js',
-                        'build/<%= pkg.version %>/controller/*.controller.js',
-                        'build/<%= pkg.version %>/controllers/*.controller.js'
+                        'dist/<%= pkg.version %>/**/*.html',
+                        'dist/<%= pkg.version %>/**/*.js',
+                        'dist/<%= pkg.version %>/**/*.css',
+                        'dist/<%= pkg.version %>/**/*.json',
+                        'dist/<%= pkg.version %>/**/*.xml'
                     ]
                 },
                 options: {
@@ -94,15 +80,11 @@ module.exports = function(grunt) {
                     }, {
                         pattern: /"latest\//ig,
                         replacement: '"<%= pkg.version %>/'
-                    }, {
-                        pattern: /"latest\/css\/custom.css/ig,
-                        replacement: '"<%= pkg.version %>/css/custom.css'
                     }]
                 }
             }
         }
     });
-    grunt.loadNpmTasks('grunt-nwabap-ui5uploader');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -113,6 +95,6 @@ module.exports = function(grunt) {
     grunt.registerTask('test-version', ['clean', 'copy', 'string-replace', 'uglify', 'karma:version']);
     grunt.registerTask('test', ['karma:latest']);
     grunt.registerTask('default', ['test-latest', 'test-version']);
-    grunt.registerTask('publish', ['default', 'nwabap_ui5uploader']);
+    grunt.registerTask('publish', ['default']);
 }
 

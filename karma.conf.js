@@ -2,7 +2,7 @@ module.exports = function(config) {
     config.set({
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
-        basePath: 'build',
+        basePath: 'test',
         pcaptureTimeout: 60000,
         browserDisconnectTimeout: 100000,
         browserDisconnectTolerance: 3,
@@ -14,14 +14,15 @@ module.exports = function(config) {
 
         // list of files / patterns to load in the browser
         files: [
-            {
-                included: false,
+            "https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js",
+            "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js", {
+                included: true,
                 served: true,
                 pattern: '**/*.js'
             }, {
                 included: true,
                 served: true,
-                pattern: '**/main.js'
+                pattern: '**/*.test.js'
             }, {
                 included: true,
                 served: true,
