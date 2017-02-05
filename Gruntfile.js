@@ -12,7 +12,7 @@ module.exports = function(grunt) {
                 basePath: 'dist'
             },
             latest: {
-                basePath: 'test'
+                basePath: 'src'
             }
         },
         jshint: {
