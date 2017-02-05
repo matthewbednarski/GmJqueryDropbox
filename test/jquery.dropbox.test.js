@@ -101,17 +101,41 @@
 
 
             it("$.dropbox.getFile(): Download a binary file", function(done) {
-                var toGet = '/8ww3q2sn.pdf';
-                $.dropbox.basic.getFile({
-                    path: toGet
-                }).then(function(file) {
-                    expect(file.type).toBe('application/octet-stream');
-                    expect(file.size).toBeGreaterThan(0);
-                    done(file);
-                }).fail(function(err) {
-                    console.dir(err);
-                    done.fail(err);
+                var toAdd = 'test-for-getFile-binary-blob-' + makeid();
+                var debug = {
+                    hello: "world"
+                };
+                var blob = new Blob([JSON.stringify(debug, null, 2)], {
+                    type: 'application/json'
                 });
+                $.dropbox.basic.addFile(blob, toAdd)
+                    .then(function(fileAdded) {
+                        // console.dir(fileAdded);
+                        expect(fileAdded).toBeTruthy();
+                        console.dir(fileAdded);
+                        $.dropbox.basic.getFile({
+                            path: toAdd
+                        }).then(function(file) {
+                            expect(file.type).toBe('application/octet-stream');
+                            expect(file.size).toBeGreaterThan(0);
+                            done(file);
+                        }).fail(function(err) {
+                            console.dir(err);
+                            done.fail(err);
+                        }).always(function() {
+                            $.dropbox.fileOps.remove(toAdd)
+                                .then(function(file) {
+                                    done(file);
+                                }).fail(function(err) {
+                                    console.error(err);
+                                    done.fail(err);
+                                });
+                        });
+                    }).fail(function(err) {
+                        console.error(err);
+                        done.fail(err);
+                    });
+
             });
             it("$.dropbox.getFileText(): Download a text file", function(done) {
                 var toAdd = 'test-for-getFileText-' + makeid();

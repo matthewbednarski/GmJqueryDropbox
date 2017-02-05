@@ -187,9 +187,18 @@ jQuery(function($) {
          */
         function getFile(content) {
             var url = 'https://content.dropboxapi.com/2/files/download';
+            if(content === undefined){
+                content = {};
+            }
+            if(content.path === undefined || content.path === ''){
+                content.path = '/';
+            }
             var dropboxApiArg = {
                 path: content.path
             };
+            if (!dropboxApiArg.path.startsWith('/')){
+                dropboxApiArg.path = '/' + dropboxApiArg.path;
+            }
             return $.ajax({
                 type: 'POST',
                 url: url,
@@ -213,9 +222,18 @@ jQuery(function($) {
          */
         function getFileText(content) {
             var url = 'https://content.dropboxapi.com/2/files/download';
+            if(content === undefined){
+                content = {};
+            }
+            if(content.path === undefined || content.path === ''){
+                content.path = '/';
+            }
             var dropboxApiArg = {
                 path: content.path
             };
+            if (!dropboxApiArg.path.startsWith('/')){
+                dropboxApiArg.path = '/' + dropboxApiArg.path;
+            }
             return $.ajax({
                 type: 'POST',
                 url: url,
