@@ -1,7 +1,7 @@
 //(function(){
 
 
-$(document).ready(function(event) {
+$().ready(function(event) {
     $(".has-token-indicator").hide();
     var has_creds = false;
     if (localStorage.dropbox_access !== undefined) {
