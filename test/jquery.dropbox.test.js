@@ -7,15 +7,17 @@
         function() {
             var data;
 
-            beforeAll(function(done) {
+            beforeEach(function(done) {
                 data = {
                     token: makeid()
                 };
-                $.dropbox.setToken(data.token);
-                done(data);
+                $().ready(function() {
+                    $.dropbox.setToken(data.token);
+                    done(data);
+                });
             });
 
-            afterAll(function() {
+            afterEach(function() {
                 data = undefined;
             });
 
@@ -35,15 +37,17 @@
         function() {
             var data;
 
-            beforeAll(function(done) {
+            beforeEach(function(done) {
                 data = {
                     token: dropbox_token
                 };
-                $.dropbox.setToken(data.token);
-                done(data);
+                $().ready(function() {
+                    $.dropbox.setToken(data.token);
+                    done(data);
+                });
             });
 
-            afterAll(function() {
+            afterEach(function() {
                 data = undefined;
             });
 
@@ -215,15 +219,17 @@
             var toCopy = 'test-copy-' + makeid();
             var directoryToCreate = 'test-directory-' + makeid();
 
-            beforeAll(function(done) {
+            beforeEach(function(done) {
                 data = {
                     token: dropbox_token
                 };
-                $.dropbox.setToken(data.token);
-                done(data);
+                $().ready(function() {
+                    $.dropbox.setToken(data.token);
+                    done(data);
+                });
             });
 
-            afterAll(function() {
+            afterEach(function() {
                 data = undefined;
             });
 
@@ -299,15 +305,16 @@
             });
 
         });
+
+    function makeid() {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (var i = 0; i < 5; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
+    }
+
 })(_, $);
-
-function makeid() {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    for (var i = 0; i < 5; i++)
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-    return text;
-}
 
