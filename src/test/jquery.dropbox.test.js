@@ -135,16 +135,20 @@
                         // console.dir(fileAdded);
                         expect(fileAdded).toBeTruthy();
                         console.dir(fileAdded);
+                        console.log(toAdd);
                         $.dropbox.basic.getFile({
                             path: toAdd
                         }).then(function(file) {
                             expect(file.type).toBe('application/octet-stream');
                             expect(file.size).toBeGreaterThan(0);
                             done(file);
-                        }).fail(function(err) {
-                            console.dir(err);
+                        }).fail(function(err, s, r) {
+                            console.error(err);
+                            console.error(s);
+                            console.error(r);
                             done.fail(err);
-                        }).always(function() {
+                        }).always(function(p) {
+                           console.error(p);
                             $.dropbox.fileOps.remove(toAdd)
                                 .then(function(file) {
                                     done(file);
@@ -173,8 +177,10 @@
                                 .then(function(file) {
                                     done(file);
                                 });
-                        }).fail(function(err) {
+                        }).fail(function(err, a, b) {
                             console.error(err);
+                            console.error(a);
+                            console.error(b);
                             $.dropbox.fileOps.remove(toGet)
                                 .then(function(file) {
                                     done(file);
@@ -190,7 +196,7 @@
                 var toAdd = 'test-for-getFileText-' + makeid();
                 $.dropbox.basic.addFileText(toAdd, toAdd)
                     .then(function(fileAdded) {
-                        // console.dir(fileAdded);
+                        console.log(fileAdded);
                         expect(fileAdded).toBeTruthy();
                         $.dropbox.fileOps.remove(toAdd)
                             .then(function(file) {
@@ -356,7 +362,7 @@
         var text = "";
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-        for (var i = 0; i < 5; i++)
+        for (var i = 0; i < 10; i++)
             text += possible.charAt(Math.floor(Math.random() * possible.length));
 
         return text;

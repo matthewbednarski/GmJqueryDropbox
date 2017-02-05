@@ -205,7 +205,7 @@ jQuery(function($) {
                 dataType: 'blob',
                 beforeSend: function(request) {
                     request.setRequestHeader("Authorization", 'Bearer ' + access_token);
-                    request.setRequestHeader("Accept", content.mime_type);
+                    // request.setRequestHeader("Accept", content.mime_type);
                     request.setRequestHeader("Dropbox-API-Arg", JSON.stringify(dropboxApiArg));
                 }
             });
@@ -239,7 +239,7 @@ jQuery(function($) {
                 url: url,
                 beforeSend: function(request) {
                     request.setRequestHeader("Authorization", 'Bearer ' + access_token);
-                    request.setRequestHeader("Accept", content.mime_type);
+                    // request.setRequestHeader("Accept", content.mime_type);
                     request.setRequestHeader("Dropbox-API-Arg", JSON.stringify(dropboxApiArg));
                 }
             });

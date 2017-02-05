@@ -15,7 +15,8 @@ module.exports = function(config) {
         // list of files / patterns to load in the browser
         files: [
             "https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js",
-            "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js", {
+            "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js",
+            "https://raw.githubusercontent.com/peerlibrary/Blob.js/7fd48da3f9089e0d23bf1ddb48a858eb81a28f65/Blob.js", {
                 included: true,
                 served: true,
                 pattern: '**/*.js'
