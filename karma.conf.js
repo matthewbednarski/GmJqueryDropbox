@@ -2,7 +2,7 @@ module.exports = function(config) {
     config.set({
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
-        basePath: 'test',
+        basePath: 'src',
         pcaptureTimeout: 60000,
         browserDisconnectTimeout: 100000,
         browserDisconnectTolerance: 3,
