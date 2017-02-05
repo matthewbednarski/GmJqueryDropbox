@@ -75,27 +75,49 @@
                         done("No file: '" + entry.path + "'");
                     });
             });
-            it("$.dropbox.basic.files(): Should contain /8ww3q2sn.pdf ", function(done) {
-                var toFind = '/8ww3q2sn.pdf';
-                $.dropbox.basic.files()
-                    .then(function(files) {
-                        var entry = _.chain(files.entries)
-                            .map(function(content) {
-                                content.path = content.path_lower;
-                                return content;
-                            })
-                            .filter(function(file) {
-                                return file.path === '/8ww3q2sn.pdf';
+            it("$.dropbox.basic.files(): files() list should contain ", function(done) {
+                var toAdd = 'test-for-list-contains-' + makeid();
+                var debug = {
+                    hello: "world"
+                };
+                var blob = new Blob([JSON.stringify(debug, null, 2)], {
+                    type: 'application/json'
+                });
+                $.dropbox.basic.addFile(blob, toAdd)
+                    .then(function(fileAdded) {
+                        // console.dir(fileAdded);
+                        expect(fileAdded).toBeTruthy();
+                        var toFind = '/' + toAdd.toLowerCase();
+                        $.dropbox.basic.files()
+                            .then(function(files) {
+                                var entry = _.chain(files.entries)
+                                    .map(function(content) {
+                                        content.path = content.path_lower;
+                                        return content;
+                                    })
+                                    .filter(function(file) {
+                                        return file.path === toFind;
 
-                            })
-                            .value();
-                        expect(entry).not.toBe(undefined);
-                        expect(entry.length).not.toBe(undefined);
-                        expect(entry.length).toBe(1);
-                        if (!entry || entry.length < 1) {
-                            done.fail("Missing file: '/8ww3q2sn.pdf'");
-                        }
-                        done("Found file: '/8ww3q2sn.pdf'");
+                                    })
+                                    .value();
+                                expect(entry).not.toBe(undefined);
+                                expect(entry.length).not.toBe(undefined);
+                                expect(entry.length).toBe(1);
+                                if (!entry || entry.length < 1) {
+                                    done.fail("Missing file: '" + toFind + "'");
+                                }
+                                done("Found file: '" + toFind + "'");
+                            });
+                    }).fail(function(err) {
+                        console.error(err);
+                        done.fail(err);
+                    })
+                    .always(function() {
+                        $.dropbox.fileOps.remove(toAdd)
+                            .then(function(file) {
+                            }).fail(function(err) {
+                                console.error(err);
+                            });
                     });
             });
 
