@@ -25,7 +25,7 @@ module.exports = function(config) {
             }, {
                 included: true,
                 served: true,
-                pattern: '**/allTests.js'
+                pattern: '**/*Test.js'
             }
         ],
 
